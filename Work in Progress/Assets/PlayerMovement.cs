@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 12f;
     public float gravity = -9.81f;
     public float jumpHeight = 3f;
+    public float gunSpeed = 50f;
+    public float gunTimer = 0f;
 
     public Transform groundCheck;
     public float groundDistance = 0.4f;
@@ -27,6 +29,7 @@ public class PlayerMovement : MonoBehaviour
         if(isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
+            gunTimer = 6f;
         }
 
         float x = Input.GetAxis("Horizontal");
@@ -40,6 +43,19 @@ public class PlayerMovement : MonoBehaviour
         {
             velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
         }
+
+        if (gunTimer <= 5f)
+        {
+            gunTimer += 1 * Time.deltaTime;
+            controller.Move(-Camera.main.transform.forward * Time.deltaTime * gunSpeed);
+            //velocity = -transform.forward * Time.deltaTime * 10000f;
+        }
+
+        if (Input.GetButtonDown("Fire1"))
+        {
+            gunTimer = 0f;
+        }
+
         velocity.y += gravity * Time.deltaTime;
 
         controller.Move(velocity * Time.deltaTime);
